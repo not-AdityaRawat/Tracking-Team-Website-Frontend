@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html><head><meta charset='utf-8'></head><body>
+<canvas id='c' width='192' height='192'></canvas>
+<script>
+const c = document.getElementById('c');
+const ctx = c.getContext('2d');
+ctx.fillStyle = '#ffffff';
+ctx.fillRect(0, 0, 192, 192);
+ctx.fillStyle = '#0a0a0a';
+ctx.fillRect(48, 54, 96, 12);
+ctx.fillRect(48, 84, 96, 12);
+ctx.fillRect(48, 114, 96, 12);
+ctx.fillRect(48, 144, 72, 12);
+ctx.beginPath();
+ctx.arc(36, 60, 6, 0, Math.PI * 2);
+ctx.arc(36, 90, 6, 0, Math.PI * 2);
+ctx.arc(36, 120, 6, 0, Math.PI * 2);
+ctx.arc(36, 150, 6, 0, Math.PI * 2);
+ctx.fill();
+const link = document.createElement('a');
+link.download = 'pwa-192x192.png';
+link.href = c.toDataURL();
+link.click();
+</script>
+</body></html>

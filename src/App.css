@@ -1,0 +1,501 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #ffffff;
+  color: #0a0a0a;
+  line-height: 1.6;
+}
+
+.navbar {
+  background: #fafafa;
+  border-bottom: 1px solid #e5e5e5;
+  padding: 15px 20px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-btn {
+  padding: 10px 24px;
+  background: transparent;
+  color: #6b6b6b;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+  background: #ffffff;
+  color: #0a0a0a;
+}
+
+.nav-btn.active {
+  background: #0a0a0a;
+  color: #ffffff;
+}
+
+.app-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.header {
+  text-align: center;
+  padding: 40px 0;
+  border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 40px;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-bottom: 10px;
+}
+
+.header-info {
+  color: #6b6b6b;
+  font-size: 0.95rem;
+  margin-top: 10px;
+}
+
+.sort-container {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 40px;
+  padding: 20px;
+  background: #fafafa;
+  border-radius: 8px;
+}
+
+.sort-btn {
+  padding: 10px 20px;
+  background: #ffffff;
+  color: #0a0a0a;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+.filter{
+  padding: 10px 20px;
+  /* background: #ffffff; */
+  color: #c83131;
+  /* border: 1px solid #e5e5e5; */
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.sort-btn:hover {
+  background: #0a0a0a;
+  color: #ffffff;
+  border-color: #0a0a0a;
+}
+
+.sort-btn.active {
+  background: #0a0a0a;
+  color: #ffffff;
+  border-color: #0a0a0a;
+}
+
+.clear-btn {
+  background: #0a0a0a;
+  color: #ffffff;
+  border-color: #0a0a0a;
+}
+
+.clear-btn:hover {
+  background: #ff4444;
+  border-color: #ff4444;
+}
+
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6b6b6b;
+  font-size: 1.1rem;
+}
+
+.error {
+  text-align: center;
+  padding: 60px 20px;
+  color: #ff4444;
+  font-size: 1.1rem;
+}
+
+.table-container {
+  overflow-x: auto;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+}
+
+thead {
+  background: #fafafa;
+  border-bottom: 2px solid #e5e5e5;
+}
+
+th {
+  padding: 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #0a0a0a;
+}
+
+td {
+  padding: 16px;
+  border-bottom: 1px solid #f5f5f5;
+  font-size: 0.95rem;
+  color: #2a2a2a;
+}
+
+tbody tr:hover {
+  background: #fafafa;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.coordinator-cell {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  min-height: 40px;
+}
+
+.coordinator-name {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  letter-spacing: 0.01em;
+}
+
+.coordinator-unassigned {
+  color: #9b9b9b;
+  font-style: italic;
+}
+
+.coordinator-input-container {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.coordinator-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+
+.coordinator-input:focus {
+  outline: none;
+  border-color: #0a0a0a;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #0a0a0a;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  background: #0a0a0a;
+  color: #ffffff;
+  border-color: #0a0a0a;
+}
+
+.btn-save {
+  background: #0a0a0a;
+  color: #ffffff;
+  border-color: #0a0a0a;
+}
+
+.btn-cancel:hover {
+  background: #ff4444;
+  color: #ffffff;
+  border-color: #ff4444;
+}
+
+.pagination {
+  margin-top: 40px;
+  padding: 30px 0;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  border-top: 1px solid #e5e5e5;
+}
+
+.pagination button {
+  padding: 12px 24px;
+  background: #ffffff;
+  color: #0a0a0a;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+  background: #0a0a0a;
+  color: #ffffff;
+  border-color: #0a0a0a;
+}
+
+.pagination button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.pagination-info {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #2a2a2a;
+}
+
+/* Coordinator color variations */
+.coordinator-name[data-color="1"] { background: #FFE5E5; color: #CC0000; }
+.coordinator-name[data-color="2"] { background: #E5F5FF; color: #0066CC; }
+.coordinator-name[data-color="3"] { background: #E5FFE5; color: #00AA00; }
+.coordinator-name[data-color="4"] { background: #FFF5E5; color: #CC8800; }
+.coordinator-name[data-color="5"] { background: #F5E5FF; color: #8800CC; }
+.coordinator-name[data-color="6"] { background: #FFE5F5; color: #CC0088; }
+.coordinator-name[data-color="7"] { background: #E5FFFF; color: #008888; }
+.coordinator-name[data-color="8"] { background: #FFFFE5; color: #888800; }
+
+/* Toggle Switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #e5e5e5;
+  transition: .3s;
+  border-radius: 24px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #0a0a0a;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #0a0a0a;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .app-container {
+    padding: 20px 10px;
+  }
+  
+  .navbar {
+    padding: 12px 10px;
+    gap: 8px;
+  }
+  
+  .nav-btn {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+  
+  .header {
+    padding: 20px 0;
+    margin-bottom: 20px;
+  }
+  
+  .header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .header-info {
+    font-size: 0.85rem;
+  }
+  
+  .sort-container {
+    padding: 15px 10px;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .sort-btn, .filter {
+    padding: 8px 14px;
+    font-size: 0.85rem;
+  }
+  
+  .table-container {
+    border-radius: 6px;
+    font-size: 0.85rem;
+  }
+  
+  /* Make table scrollable horizontally on mobile */
+  table {
+    min-width: 900px;
+  }
+  
+  th, td {
+    padding: 12px 8px;
+    font-size: 0.8rem;
+  }
+  
+  th {
+    font-size: 0.75rem;
+  }
+  
+  .coordinator-cell {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  
+  .coordinator-name {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+  }
+  
+  .coordinator-input-container {
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .coordinator-input {
+    width: 100%;
+    font-size: 0.85rem;
+  }
+  
+  .btn {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    width: 100%;
+  }
+  
+  .pagination {
+    margin-top: 20px;
+    padding: 20px 0;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  
+  .pagination button {
+    padding: 10px 18px;
+    font-size: 0.85rem;
+  }
+  
+  .pagination-info {
+    font-size: 0.85rem;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .switch {
+    width: 44px;
+    height: 22px;
+  }
+  
+  .slider:before {
+    height: 16px;
+    width: 16px;
+  }
+  
+  input:checked + .slider:before {
+    transform: translateX(22px);
+  }
+}
+
+@media (max-width: 480px) {
+  .header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .sort-container {
+    justify-content: flex-start;
+  }
+  
+  .sort-btn, .filter {
+    flex: 1 1 auto;
+    min-width: 120px;
+  }
+  
+  th, td {
+    padding: 10px 6px;
+  }
+  
+  .pagination button {
+    padding: 8px 14px;
+    font-size: 0.8rem;
+  }
+}
+
