@@ -1,4 +1,4 @@
-# NSUT Placement Tracker 📊
+# T&P Tracker 📊
 
 A Progressive Web App (PWA) for tracking and managing NSUT placement companies and coordinator assignments.
 
