@@ -17,6 +17,19 @@ function App() {
   const [sortOrder, setSortOrder] = useState("asc");
   const [companiesPerPage, setCompaniesPerPage] = useState(50);
   const [currentView, setCurrentView] = useState('companies'); // 'companies' or 'performance'
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newCompanyData, setNewCompanyData] = useState({
+    Name: '',
+    CGPA: '',
+    Title: '',
+    Stipend: '',
+    'Stipend Info': '',
+    Location: '',
+    'Job Title': '',
+    Type: '',
+    'Arrival Date': ''
+  });
+  const [searchQuery, setSearchQuery] = useState("");
   
   const handleCoordinatorUpdate = async (companyId, currentCoordinator) => {
     setEditingId(companyId);
@@ -85,6 +98,58 @@ function App() {
     }
   };
   
+  const handleAddCompany = async (e) => {
+    e.preventDefault();
+    
+    if (!newCompanyData.Name.trim()) {
+      alert('Company name is required');
+      return;
+    }
+    
+    try {
+      const response = await fetch(`${API_URL}/company`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          Name: newCompanyData.Name,
+          CGPA: newCompanyData.CGPA ? parseFloat(newCompanyData.CGPA) : null,
+          Title: newCompanyData.Title || null,
+          Stipend: newCompanyData.Stipend ? parseFloat(newCompanyData.Stipend) : null,
+          'Stipend Info': newCompanyData['Stipend Info'] || null,
+          Location: newCompanyData.Location || null,
+          'Job Title': newCompanyData['Job Title'] || null,
+          Type: newCompanyData.Type || null,
+          'Arrival Date': newCompanyData['Arrival Date'] || null
+        }),
+      });
+      
+      if (!response.ok) throw new Error("Failed to add company");
+      
+      // Reset form and close modal
+      setNewCompanyData({
+        Name: '',
+        CGPA: '',
+        Title: '',
+        Stipend: '',
+        'Stipend Info': '',
+        Location: '',
+        'Job Title': '',
+        Type: '',
+        'Arrival Date': ''
+      });
+      setShowAddModal(false);
+      
+      // Refresh the company list
+      setCurrentPage(1);
+      alert('Company added successfully!');
+    } catch (err) {
+      console.error("Error adding company:", err);
+      alert("Failed to add company");
+    }
+  };
+  
   // Fetch companies for current page directly from backend (which queries MongoDB)
   useEffect(() => {
     const fetchPageData = async () => {
@@ -93,6 +158,9 @@ function App() {
         let url = `${API_URL}/companies?page=${currentPage}&limit=${companiesPerPage}`;
         if (sortBy) {
           url += `&sortBy=${sortBy}&sortOrder=${sortOrder}`;
+        }
+        if (searchQuery) {
+          url += `&search=${encodeURIComponent(searchQuery)}`;
         }
         
         const response = await fetch(url);
@@ -111,7 +179,7 @@ function App() {
     };
     
     fetchPageData();
-  }, [currentPage, sortBy, sortOrder, companiesPerPage]);
+  }, [currentPage, sortBy, sortOrder, companiesPerPage, searchQuery]);
 
   if (error) return <p className="error">Error: {error}</p>;
 
@@ -138,28 +206,90 @@ function App() {
       </nav>
       <div className="app-container">
       <section className="header">
-        <h1>T&P Tracking Team</h1>
-        <p className="header-info">Total Companies: {totalCount} | Showing: {companies.length}</p>
-        <div style={{ marginTop: '15px', display: 'flex', gap: '10px', justifyContent: 'center', alignItems: 'center' }}>
-          <span style={{ fontSize: '0.9rem', color: '#6b6b6b' }}>Show:</span>
-          <select 
-            value={companiesPerPage} 
-            onChange={(e) => { setCompaniesPerPage(Number(e.target.value)); setCurrentPage(1); }}
-            style={{ 
-              padding: '6px 12px', 
-              border: '1px solid #e5e5e5', 
+        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+          <h1 style={{ margin: '0 0 8px 0' }}>T&P Tracking Team</h1>
+          <p className="header-info">Total Companies: {totalCount} | Showing: {companies.length}</p>
+        </div>
+        
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '15px' }}>
+          <button
+            onClick={() => setShowAddModal(true)}
+            style={{
+              padding: '10px 20px',
+              background: '#0a0a0a',
+              color: '#ffffff',
+              border: 'none',
               borderRadius: '6px',
-              background: '#ffffff',
               cursor: 'pointer',
-              fontSize: '0.9rem'
+              fontSize: '0.9rem',
+              fontWeight: '600',
+              transition: 'all 0.2s ease'
             }}
+            onMouseEnter={(e) => e.target.style.background = '#2a2a2a'}
+            onMouseLeave={(e) => e.target.style.background = '#0a0a0a'}
           >
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-            <option value={150}>150</option>
-            <option value={300}>300</option>
-          </select>
-          <span style={{ fontSize: '0.9rem', color: '#6b6b6b' }}>per page</span>
+            + Add Company
+          </button>
+        </div>
+        
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px' }}>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <input
+              type="text"
+              placeholder="Search company name..."
+              value={searchQuery}
+              onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+              style={{
+                padding: '8px 12px',
+                border: '1px solid #e5e5e5',
+                borderRadius: '6px',
+                fontSize: '0.9rem',
+                width: '250px',
+                outline: 'none'
+              }}
+              onFocus={(e) => e.target.style.borderColor = '#0a0a0a'}
+              onBlur={(e) => e.target.style.borderColor = '#e5e5e5'}
+            />
+            {searchQuery && (
+              <button
+                onClick={() => { setSearchQuery(""); setCurrentPage(1); }}
+                style={{
+                  padding: '8px 12px',
+                  background: '#0a0a0a',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '0.85rem',
+                  fontWeight: '500'
+                }}
+              >
+                Clear
+              </button>
+            )}
+          </div>
+          
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <span style={{ fontSize: '0.9rem', color: '#6b6b6b' }}>Show:</span>
+            <select 
+              value={companiesPerPage} 
+              onChange={(e) => { setCompaniesPerPage(Number(e.target.value)); setCurrentPage(1); }}
+              style={{ 
+                padding: '6px 12px', 
+                border: '1px solid #e5e5e5', 
+                borderRadius: '6px',
+                background: '#ffffff',
+                cursor: 'pointer',
+                fontSize: '0.9rem'
+              }}
+            >
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+              <option value={150}>150</option>
+              <option value={300}>300</option>
+            </select>
+            <span style={{ fontSize: '0.9rem', color: '#6b6b6b' }}>per page</span>
+          </div>
         </div>
       </section>
     
@@ -304,6 +434,196 @@ function App() {
         </>
       )}
       </div>
+      
+      {/* Add Company Modal */}
+      {showAddModal && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1000
+          }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setShowAddModal(false);
+            }
+          }}
+        >
+          <div
+            style={{
+              background: '#ffffff',
+              padding: '30px',
+              borderRadius: '8px',
+              maxWidth: '500px',
+              width: '90%',
+              maxHeight: '80vh',
+              overflowY: 'auto'
+            }}
+          >
+            <h2 style={{ marginTop: 0, marginBottom: '20px' }}>Add New Company</h2>
+            <form onSubmit={handleAddCompany}>
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', fontWeight: '500' }}>
+                  Company Name <span style={{ color: '#ff0000' }}>*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={newCompanyData.Name}
+                  onChange={(e) => setNewCompanyData({ ...newCompanyData, Name: e.target.value })}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    border: '1px solid #e5e5e5',
+                    borderRadius: '6px',
+                    fontSize: '0.9rem'
+                  }}
+                />
+              </div>
+              
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', fontWeight: '500' }}>CGPA</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={newCompanyData.CGPA}
+                  onChange={(e) => setNewCompanyData({ ...newCompanyData, CGPA: e.target.value })}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    border: '1px solid #e5e5e5',
+                    borderRadius: '6px',
+                    fontSize: '0.9rem'
+                  }}
+                />
+              </div>
+              
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', fontWeight: '500' }}>Job Title</label>
+                <input
+                  type="text"
+                  value={newCompanyData['Job Title']}
+                  onChange={(e) => setNewCompanyData({ ...newCompanyData, 'Job Title': e.target.value })}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    border: '1px solid #e5e5e5',
+                    borderRadius: '6px',
+                    fontSize: '0.9rem'
+                  }}
+                />
+              </div>
+              
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', fontWeight: '500' }}>Stipend</label>
+                <input
+                  type="number"
+                  value={newCompanyData.Stipend}
+                  onChange={(e) => setNewCompanyData({ ...newCompanyData, Stipend: e.target.value })}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    border: '1px solid #e5e5e5',
+                    borderRadius: '6px',
+                    fontSize: '0.9rem'
+                  }}
+                />
+              </div>
+              
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', fontWeight: '500' }}>Location</label>
+                <input
+                  type="text"
+                  value={newCompanyData.Location}
+                  onChange={(e) => setNewCompanyData({ ...newCompanyData, Location: e.target.value })}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    border: '1px solid #e5e5e5',
+                    borderRadius: '6px',
+                    fontSize: '0.9rem'
+                  }}
+                />
+              </div>
+              
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', fontWeight: '500' }}>Type</label>
+                <input
+                  type="text"
+                  value={newCompanyData.Type}
+                  onChange={(e) => setNewCompanyData({ ...newCompanyData, Type: e.target.value })}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    border: '1px solid #e5e5e5',
+                    borderRadius: '6px',
+                    fontSize: '0.9rem'
+                  }}
+                />
+              </div>
+              
+              <div style={{ marginBottom: '15px' }}>
+                <label style={{ display: 'block', marginBottom: '5px', fontWeight: '500' }}>Arrival Date</label>
+                <input
+                  type="text"
+                  value={newCompanyData['Arrival Date']}
+                  onChange={(e) => setNewCompanyData({ ...newCompanyData, 'Arrival Date': e.target.value })}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    border: '1px solid #e5e5e5',
+                    borderRadius: '6px',
+                    fontSize: '0.9rem'
+                  }}
+                />
+              </div>
+              
+              <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+                <button
+                  type="submit"
+                  style={{
+                    flex: 1,
+                    padding: '10px',
+                    background: '#0a0a0a',
+                    color: '#ffffff',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '0.9rem',
+                    fontWeight: '600'
+                  }}
+                >
+                  Add Company
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowAddModal(false)}
+                  style={{
+                    flex: 1,
+                    padding: '10px',
+                    background: '#ffffff',
+                    color: '#0a0a0a',
+                    border: '1px solid #e5e5e5',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '0.9rem',
+                    fontWeight: '600'
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </>
   );
 }
